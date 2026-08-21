@@ -809,17 +809,17 @@ let attendance =
 // ⚠️ GANTI DENGAN KOORDINAT SEKOLAH YANG BENAR.
 
 const SCHOOL_LAT =
-    -62.274468;
+    -6.274532;
 
 const SCHOOL_LON =
-    107.089056;
+    107.0809121;
 
 
 // Radius maksimal
 // dalam meter.
 
 const MAX_DISTANCE =
-    2000;
+    50;
 
 
 // =====================================================
@@ -1004,31 +1004,31 @@ function distance(
 ){
 
     const R =
-        6371000;
+        6000;
 
 
     const p1 =
         lat1 *
         Math.PI /
-       2000;
+       180;
 
 
     const p2 =
         lat2 *
         Math.PI /
-        2000;
+        180;
 
 
     const dp =
         (lat2 - lat1) *
         Math.PI /
-        2000;
+        180;
 
 
     const dl =
         (lon2 - lon1) *
         Math.PI /
-        2000;
+        180;
 
 
     const a =
