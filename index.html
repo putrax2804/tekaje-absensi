@@ -444,8 +444,14 @@ window.absen=function(){
 
             if(jarak>MAX_DISTANCE){
                 gpsStatus.innerHTML=
-                    "❌ Di luar radius sekolah.<br>Jarak: "+Math.round(jarak)+" meter";
-                return;
+    "❌ Di luar radius sekolah.<br>" +
+    "Jarak: " + Math.round(jarak) + " meter<br><br>" +
+    "📍 GPS HP:<br>" +
+    "Lat: " + lat.toFixed(6) + "<br>" +
+    "Lon: " + lon.toFixed(6) + "<br><br>" +
+    "🏫 GPS Sekolah:<br>" +
+    "Lat: " + SCHOOL_LAT + "<br>" +
+    "Lon: " + SCHOOL_LON;
             }
 
             gpsStatus.innerHTML=
