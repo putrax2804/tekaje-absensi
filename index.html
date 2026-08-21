@@ -6,1567 +6,568 @@
 <title>TKJ Attendance 3D</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background: #07111f;
-    color: white;
-    overflow-x: hidden;
-}
-
-#scene {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-}
-
-.overlay {
-    position: relative;
-    z-index: 2;
-    min-height: 100vh;
-    padding: 25px;
-    background: linear-gradient(
-        180deg,
-        rgba(7,17,31,.55),
-        rgba(7,17,31,.9)
-    );
-}
-
-header {
-    max-width: 1200px;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 25px;
-}
-
-.logo {
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.logo span {
-    color: #00eaff;
-}
-
-.clock {
-    padding: 10px 16px;
-    border: 1px solid rgba(255,255,255,.15);
-    border-radius: 12px;
-    background: rgba(0,0,0,.25);
-    backdrop-filter: blur(10px);
-}
-
-.container {
-    max-width: 1200px;
-    margin: auto;
-}
-
-.card {
-    background: rgba(8,20,35,.78);
-    border: 1px solid rgba(0,234,255,.15);
-    border-radius: 18px;
-    padding: 20px;
-    margin-bottom: 20px;
-    backdrop-filter: blur(15px);
-    box-shadow: 0 15px 40px rgba(0,0,0,.25);
-}
-
-.title {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-.stats {
-    display: grid;
-    grid-template-columns: repeat(4,1fr);
-    gap: 15px;
-}
-
-.stat {
-    padding: 18px;
-    border-radius: 15px;
-    background: rgba(255,255,255,.05);
-    border: 1px solid rgba(255,255,255,.08);
-}
-
-.stat small {
-    color: #9fb0c4;
-}
-
-.stat h2 {
-    margin-top: 7px;
-}
-
-.form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-select,
-input {
-    width: 100%;
-    padding: 13px;
-    border: 1px solid rgba(255,255,255,.15);
-    border-radius: 10px;
-    background: #0d1b2c;
-    color: white;
-    outline: none;
-}
-
-button {
-    border: none;
-    border-radius: 10px;
-    padding: 13px 18px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: .2s;
-}
-
-button:hover {
-    transform: translateY(-2px);
-}
-
-.btn-gps {
-    background: #00eaff;
-    color: #00131a;
-}
-
-.btn-camera {
-    background: #9b59b6;
-    color: white;
-}
-
-.btn-clear {
-    background: #e74c3c;
-    color: white;
-}
-
-.gps-status {
-    margin-top: 15px;
-    padding: 12px;
-    border-radius: 10px;
-    background: rgba(255,255,255,.05);
-    color: #b9c7d8;
-}
-
-.camera-box {
-    margin-top: 15px;
-    display: none;
-}
-
-.camera-box video {
-    width: 100%;
-    max-width: 500px;
-    border-radius: 15px;
-    background: black;
-    border: 1px solid rgba(0,234,255,.2);
-}
-
-.camera-controls {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 10px;
-}
-
-.photo-preview {
-    margin-top: 15px;
-    display: none;
-}
-
-.photo-preview img {
-    width: 180px;
-    max-width: 100%;
-    border-radius: 12px;
-    border: 2px solid rgba(0,234,255,.4);
-}
-
-.photo-status {
-    margin-top: 10px;
-    color: #b9c7d8;
-}
-
-.table-wrap {
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 850px;
-}
-
-th,
-td {
-    padding: 13px;
-    border-bottom: 1px solid rgba(255,255,255,.08);
-    text-align: left;
-}
-
-th {
-    color: #00eaff;
-}
-
-.table-photo {
-    width: 55px;
-    height: 55px;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
-.badge {
-    display: inline-block;
-    padding: 5px 9px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.hadir {
-    background: rgba(46,204,113,.2);
-    color: #55efc4;
-}
-
-.sakit {
-    background: rgba(241,196,15,.2);
-    color: #ffeaa7;
-}
-
-.izin {
-    background: rgba(52,152,219,.2);
-    color: #74b9ff;
-}
-
-.alpa {
-    background: rgba(231,76,60,.2);
-    color: #ff7675;
-}
-
-.actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-@media(max-width:700px) {
-
-    .stats {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .form {
-        grid-template-columns: 1fr;
-    }
-
-    header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .overlay {
-        padding: 15px;
-    }
-}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#07111f;color:white;overflow-x:hidden}
+#scene{position:fixed;inset:0;z-index:0}
+.overlay{position:relative;z-index:2;min-height:100vh;padding:25px;background:linear-gradient(180deg,rgba(7,17,31,.55),rgba(7,17,31,.9))}
+header{max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:25px}
+.logo{font-size:28px;font-weight:bold}.logo span{color:#00eaff}
+.clock{padding:10px 16px;border:1px solid rgba(255,255,255,.15);border-radius:12px;background:rgba(0,0,0,.25);backdrop-filter:blur(10px)}
+.container{max-width:1200px;margin:auto}
+.card{background:rgba(8,20,35,.78);border:1px solid rgba(0,234,255,.15);border-radius:18px;padding:20px;margin-bottom:20px;backdrop-filter:blur(15px);box-shadow:0 15px 40px rgba(0,0,0,.25)}
+.title{font-size:20px;font-weight:bold;margin-bottom:15px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.stat{padding:18px;border-radius:15px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.stat small{color:#9fb0c4}.stat h2{margin-top:7px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+select,input{width:100%;padding:13px;border:1px solid rgba(255,255,255,.15);border-radius:10px;background:#0d1b2c;color:white;outline:none}
+button{border:none;border-radius:10px;padding:13px 18px;cursor:pointer;font-weight:bold;transition:.2s}
+button:hover{transform:translateY(-2px)}
+button:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.btn-gps{background:#00eaff;color:#00131a}.btn-camera{background:#9b59b6;color:white}.btn-clear{background:#e74c3c;color:white}
+.gps-status{margin-top:15px;padding:12px;border-radius:10px;background:rgba(255,255,255,.05);color:#b9c7d8}
+.camera-box{margin-top:15px;display:none}.camera-box video{width:100%;max-width:500px;border-radius:15px;background:black;border:1px solid rgba(0,234,255,.2)}
+.camera-controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.photo-preview{margin-top:15px;display:none}.photo-preview img{width:180px;max-width:100%;border-radius:12px;border:2px solid rgba(0,234,255,.4)}
+.photo-status{margin-top:10px;color:#b9c7d8}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:850px}
+th,td{padding:13px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left}
+th{color:#00eaff}.table-photo{width:55px;height:55px;object-fit:cover;border-radius:8px}
+.badge{display:inline-block;padding:5px 9px;border-radius:8px;font-size:12px;font-weight:bold}
+.hadir{background:rgba(46,204,113,.2);color:#55efc4}.sakit{background:rgba(241,196,15,.2);color:#ffeaa7}
+.izin{background:rgba(52,152,219,.2);color:#74b9ff}.alpa{background:rgba(231,76,60,.2);color:#ff7675}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.db-status{margin-top:12px;font-size:13px;color:#9fb0c4}
+@media(max-width:700px){.stats{grid-template-columns:1fr 1fr}.form{grid-template-columns:1fr}header{align-items:flex-start;flex-direction:column}.overlay{padding:15px}}
 </style>
 </head>
 
 <body>
-
 <div id="scene"></div>
-
 <div class="overlay">
 
 <header>
-
-    <div class="logo">
-        TKJ<span>•</span> ATTENDANCE
-    </div>
-
-    <div class="clock" id="clock">
-        Memuat waktu...
-    </div>
-
+    <div class="logo">TKJ<span>•</span> ATTENDANCE</div>
+    <div class="clock" id="clock">Memuat waktu...</div>
 </header>
 
 <div class="container">
 
-    <!-- ========================= -->
-    <!-- REKAP -->
-    <!-- ========================= -->
+<div class="card">
+    <div class="title">📊 Rekap Absensi</div>
+    <div class="stats">
+        <div class="stat"><small>Hadir</small><h2 id="totalHadir">0</h2></div>
+        <div class="stat"><small>Sakit</small><h2 id="totalSakit">0</h2></div>
+        <div class="stat"><small>Izin</small><h2 id="totalIzin">0</h2></div>
+        <div class="stat"><small>Alpa</small><h2 id="totalAlpa">0</h2></div>
+    </div>
+</div>
 
-    <div class="card">
+<div class="card">
+    <div class="title">📍 Absensi TKJ</div>
 
-        <div class="title">
-            📊 Rekap Absensi
-        </div>
+    <div class="form">
+        <select id="student">
+            <option value="">-- Pilih Nama Siswa --</option>
+            <option>Ahmad Maulana</option>
+            <option>Akbar Putra Suhendi</option>
+            <option>Alya Raisa Putri</option>
+            <option>Alzam Haziq Ramadhan</option>
+            <option>Aulia Destriani Putri</option>
+            <option>Aurel Baby Darmawan</option>
+            <option>Deffa Putra Yudika</option>
+            <option>Desi Novianti Bahri</option>
+            <option>Dina Kartika Khairunnisa</option>
+            <option>Dini Khoeriyah</option>
+            <option>Dwi Restiyanti</option>
+            <option>Elisa Damayanti</option>
+            <option>Fahira Febrianti</option>
+            <option>Fitri Novita Sari</option>
+            <option>Fitriah Ervalina</option>
+            <option>Indah Indi Andiani</option>
+            <option>Izzam Hidayat Akbar</option>
+            <option>Januar Hadiwijaya</option>
+            <option>Juliana Rosa</option>
+            <option>Juliana Sarini</option>
+            <option>Kevin Rizkyan Syah</option>
+            <option>Khansa Rahmadani</option>
+            <option>M. Kaffa</option>
+            <option>Muhamad Dapin Saputra</option>
+            <option>Muhammad Fauzy Ridwan</option>
+            <option>Muhammad Maher Hafizh</option>
+            <option>Nayla Aluna Tsurraya</option>
+            <option>Nouvelisa Putri</option>
+            <option>Qurota Mufida</option>
+            <option>Rahmah Nurazah Azizah</option>
+            <option>Rangga Aldiansyah</option>
+            <option>Rasya Aditya Adila Putri</option>
+            <option>Raya Shafwa Meidiana Putri</option>
+            <option>Rendi Kusnaedi</option>
+            <option>Rezky Adrian Saputra Ali</option>
+            <option>Rozanah Cahya</option>
+            <option>Shafina Isnaini</option>
+        </select>
 
-        <div class="stats">
-
-            <div class="stat">
-                <small>Hadir</small>
-                <h2 id="totalHadir">0</h2>
-            </div>
-
-            <div class="stat">
-                <small>Sakit</small>
-                <h2 id="totalSakit">0</h2>
-            </div>
-
-            <div class="stat">
-                <small>Izin</small>
-                <h2 id="totalIzin">0</h2>
-            </div>
-
-            <div class="stat">
-                <small>Alpa</small>
-                <h2 id="totalAlpa">0</h2>
-            </div>
-
-        </div>
-
+        <select id="status">
+            <option value="Hadir">Hadir</option>
+            <option value="Sakit">Sakit</option>
+            <option value="Izin">Izin</option>
+            <option value="Alpa">Alpa</option>
+        </select>
     </div>
 
-
-    <!-- ========================= -->
-    <!-- FORM ABSENSI -->
-    <!-- ========================= -->
-
-    <div class="card">
-
-        <div class="title">
-            📍 Absensi TKJ
+    <div class="camera-box" id="cameraBox">
+        <video id="camera" autoplay playsinline></video>
+        <div class="camera-controls">
+            <button class="btn-camera" onclick="takePhoto()">📸 Ambil Foto</button>
+            <button class="btn-clear" onclick="stopCamera()">✖ Tutup Kamera</button>
         </div>
-
-        <div class="form">
-
-            <select id="student">
-
-                <option value="">
-                    -- Pilih Nama Siswa --
-                </option>
-
-                <option>Ahmad Maulana</option>
-                <option>Akbar Putra Suhendi</option>
-                <option>Alya Raisa Putri</option>
-                <option>Alzam Haziq Ramadhan</option>
-                <option>Aulia Destriani Putri</option>
-                <option>Aurel Baby Darmawan</option>
-                <option>Deffa Putra Yudika</option>
-                <option>Desi Novianti Bahri</option>
-                <option>Dina Kartika Khairunnisa</option>
-                <option>Dini Khoeriyah</option>
-                <option>Dwi Restiyanti</option>
-                <option>Elisa Damayanti</option>
-                <option>Fahira Febrianti</option>
-                <option>Fitri Novita Sari</option>
-                <option>Fitriah Ervalina</option>
-                <option>Indah Indi Andiani</option>
-                <option>Izzam Hidayat Akbar</option>
-                <option>Januar Hadiwijaya</option>
-                <option>Juliana Rosa</option>
-                <option>Juliana Sarini</option>
-                <option>Kevin Rizkyan Syah</option>
-                <option>Khansa Rahmadani</option>
-                <option>M. Kaffa</option>
-                <option>Muhamad Dapin Saputra</option>
-                <option>Muhammad Fauzy Ridwan</option>
-                <option>Muhammad Maher Hafizh</option>
-                <option>Nayla Aluna Tsurraya</option>
-                <option>Nouvelisa Putri</option>
-                <option>Qurota Mufida</option>
-                <option>Rahmah Nurazah Azizah</option>
-                <option>Rangga Aldiansyah</option>
-                <option>Rasya Aditya Adila Putri</option>
-                <option>Raya Shafwa Meidiana Putri</option>
-                <option>Rendi Kusnaedi</option>
-                <option>Rezky Adrian Saputra Ali</option>
-                <option>Rozanah Cahya</option>
-                <option>Shafina Isnaini</option>
-                
-
-            </select>
-
-
-            <select id="status">
-
-                <option value="Hadir">
-                    Hadir
-                </option>
-
-                <option value="Sakit">
-                    Sakit
-                </option>
-
-                <option value="Izin">
-                    Izin
-                </option>
-
-                <option value="Alpa">
-                    Alpa
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <!-- ========================= -->
-        <!-- KAMERA -->
-        <!-- ========================= -->
-
-        <div class="camera-box" id="cameraBox">
-
-            <video
-                id="camera"
-                autoplay
-                playsinline>
-            </video>
-
-            <div class="camera-controls">
-
-                <button
-                    class="btn-camera"
-                    onclick="takePhoto()">
-                    📸 Ambil Foto
-                </button>
-
-                <button
-                    class="btn-clear"
-                    onclick="stopCamera()">
-                    ✖ Tutup Kamera
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <div class="actions" style="margin-top:15px;">
-
-            <button
-                class="btn-camera"
-                onclick="startCamera()">
-
-                📷 Buka Kamera
-
-            </button>
-
-            <button
-                class="btn-gps"
-                onclick="absen()">
-
-                📍 Absen
-
-            </button>
-
-            <button
-                class="btn-clear"
-                onclick="clearData()">
-
-                🗑 Hapus Data
-
-            </button>
-
-        </div>
-
-
-        <!-- PREVIEW FOTO -->
-
-        <div
-            class="photo-preview"
-            id="photoPreview">
-
-            <div style="margin-bottom:8px;">
-                📸 Foto Absensi
-            </div>
-
-            <img
-                id="photoImage"
-                alt="Foto absensi">
-
-        </div>
-
-
-        <div
-            class="photo-status"
-            id="photoStatus">
-
-            📷 Foto belum diambil.
-
-        </div>
-
-
-        <div
-            class="gps-status"
-            id="gpsStatus">
-
-            📍 GPS belum digunakan.
-
-        </div>
-
     </div>
 
-
-    <!-- ========================= -->
-    <!-- TABEL -->
-    <!-- ========================= -->
-
-    <div class="card">
-
-        <div class="title">
-            👨‍🎓 Data Absensi
-        </div>
-
-        <div class="table-wrap">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>No</th>
-
-                        <th>Foto</th>
-
-                        <th>Nama</th>
-
-                        <th>Status</th>
-
-                        <th>Waktu</th>
-
-                        <th>Latitude</th>
-
-                        <th>Longitude</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="attendanceTable"></tbody>
-
-            </table>
-
-        </div>
-
+    <div class="actions" style="margin-top:15px;">
+        <button class="btn-camera" onclick="startCamera()">📷 Buka Kamera</button>
+        <button class="btn-gps" id="absenButton" onclick="absen()">📍 Absen</button>
+        <button class="btn-clear" onclick="clearData()">🗑 Hapus Data</button>
     </div>
 
+    <div class="photo-preview" id="photoPreview">
+        <div style="margin-bottom:8px;">📸 Foto Absensi</div>
+        <img id="photoImage" alt="Foto absensi">
+    </div>
+
+    <div class="photo-status" id="photoStatus">📷 Foto belum diambil.</div>
+    <div class="gps-status" id="gpsStatus">📍 GPS belum digunakan.</div>
+    <div class="db-status" id="dbStatus">☁️ Menghubungkan ke database...</div>
+</div>
+
+<div class="card">
+    <div class="title">👨‍🎓 Data Absensi</div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Foto</th>
+                    <th>Nama</th>
+                    <th>Status</th>
+                    <th>Waktu</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                </tr>
+            </thead>
+            <tbody id="attendanceTable"></tbody>
+        </table>
+    </div>
 </div>
 
 </div>
-
+</div>
 
 <script type="module">
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.module.js";
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-import * as THREE from
-"https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.module.js";
+/* =====================================================
+   SUPABASE CONFIG
+   GANTI 2 NILAI DI BAWAH INI DENGAN DATA PROJECT SUPABASE
+   ===================================================== */
+const SUPABASE_URL = "PASTE_SUPABASE_PROJECT_URL_DI_SINI";
+const SUPABASE_ANON_KEY = "PASTE_SUPABASE_ANON_KEY_DI_SINI";
 
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const TABLE_NAME = "tkj_attendance";
 
-// =====================================================
-// THREE.JS BACKGROUND
-// =====================================================
-
-const scene =
-    new THREE.Scene();
-
-const camera =
-    new THREE.PerspectiveCamera(
-        70,
-        window.innerWidth /
-        window.innerHeight,
-        0.1,
-        1000
-    );
-
+/* =====================================================
+   THREE.JS BACKGROUND
+   ===================================================== */
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 7;
 
+const renderer = new THREE.WebGLRenderer({antialias:true,alpha:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+document.getElementById("scene").appendChild(renderer.domElement);
 
-const renderer =
-    new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: true
-    });
-
-
-renderer.setSize(
-    window.innerWidth,
-    window.innerHeight
-);
-
-renderer.setPixelRatio(
-    Math.min(
-        window.devicePixelRatio,
-        2
-    )
-);
-
-
-document
-    .getElementById("scene")
-    .appendChild(
-        renderer.domElement
-    );
-
-
-// PARTICLES
-
-const geometry =
-    new THREE.BufferGeometry();
-
+const geometry = new THREE.BufferGeometry();
 const particleCount = 500;
+const positions = new Float32Array(particleCount * 3);
 
-const positions =
-    new Float32Array(
-        particleCount * 3
-    );
-
-
-for(
-    let i = 0;
-    i < particleCount;
-    i++
-){
-
-    positions[i * 3] =
-        (Math.random() - .5) * 20;
-
-    positions[i * 3 + 1] =
-        (Math.random() - .5) * 15;
-
-    positions[i * 3 + 2] =
-        (Math.random() - .5) * 10;
-
+for(let i=0;i<particleCount;i++){
+    positions[i*3]=(Math.random()-.5)*20;
+    positions[i*3+1]=(Math.random()-.5)*15;
+    positions[i*3+2]=(Math.random()-.5)*10;
 }
 
+geometry.setAttribute("position",new THREE.BufferAttribute(positions,3));
 
-geometry.setAttribute(
-    "position",
-    new THREE.BufferAttribute(
-        positions,
-        3
-    )
-);
+const material = new THREE.PointsMaterial({
+    color:0x00eaff,size:.035,transparent:true,opacity:.75
+});
 
-
-const material =
-    new THREE.PointsMaterial({
-
-        color: 0x00eaff,
-
-        size: .035,
-
-        transparent: true,
-
-        opacity: .75
-
-    });
-
-
-const particles =
-    new THREE.Points(
-        geometry,
-        material
-    );
-
-
+const particles = new THREE.Points(geometry,material);
 scene.add(particles);
 
-
-// WIREFRAME
-
-const boxGeometry =
-    new THREE.IcosahedronGeometry(
-        2.3,
-        1
-    );
-
-
-const boxMaterial =
-    new THREE.MeshBasicMaterial({
-
-        color: 0x00eaff,
-
-        wireframe: true,
-
-        transparent: true,
-
-        opacity: .12
-
-    });
-
-
-const object =
-    new THREE.Mesh(
-        boxGeometry,
-        boxMaterial
-    );
-
-
+const boxGeometry = new THREE.IcosahedronGeometry(2.3,1);
+const boxMaterial = new THREE.MeshBasicMaterial({
+    color:0x00eaff,wireframe:true,transparent:true,opacity:.12
+});
+const object = new THREE.Mesh(boxGeometry,boxMaterial);
 scene.add(object);
 
-
 function animate(){
-
-    requestAnimationFrame(
-        animate
-    );
-
+    requestAnimationFrame(animate);
     particles.rotation.y += .0007;
-
     particles.rotation.x += .0002;
-
     object.rotation.x += .001;
-
     object.rotation.y += .0015;
-
-    renderer.render(
-        scene,
-        camera
-    );
-
+    renderer.render(scene,camera);
 }
-
-
 animate();
 
+window.addEventListener("resize",()=>{
+    camera.aspect=window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth,window.innerHeight);
+});
 
-window.addEventListener(
-    "resize",
-    () => {
-
-        camera.aspect =
-            window.innerWidth /
-            window.innerHeight;
-
-        camera.updateProjectionMatrix();
-
-        renderer.setSize(
-            window.innerWidth,
-            window.innerHeight
-        );
-
-    }
-);
-
-
-// =====================================================
-// JAM
-// =====================================================
-
+/* =====================================================
+   JAM
+   ===================================================== */
 function updateClock(){
-
-    const now =
-        new Date();
-
-    document.getElementById(
-        "clock"
-    ).textContent =
-        now.toLocaleString(
-            "id-ID",
-            {
-                dateStyle: "full",
-                timeStyle: "medium"
-            }
-        );
-
+    const now=new Date();
+    document.getElementById("clock").textContent=now.toLocaleString("id-ID",{
+        dateStyle:"full",timeStyle:"medium"
+    });
 }
-
-
-setInterval(
-    updateClock,
-    1000
-);
-
+setInterval(updateClock,1000);
 updateClock();
 
+/* =====================================================
+   KOORDINAT SEKOLAH
+   ===================================================== */
+const SCHOOL_LAT = -6.274532;
+const SCHOOL_LON = 107.0809121;
+const MAX_DISTANCE = 50;
 
-// =====================================================
-// DATA
-// =====================================================
+/* =====================================================
+   STATE
+   ===================================================== */
+let attendance=[];
+let cameraStream=null;
+let photoData=null;
 
-let attendance =
-    JSON.parse(
-        localStorage.getItem(
-            "tkjAttendance"
-        )
-    ) || [];
-
-
-// =====================================================
-// KOORDINAT SEKOLAH
-// =====================================================
-
-// ⚠️ GANTI DENGAN KOORDINAT SEKOLAH YANG BENAR.
-
-const SCHOOL_LAT =
-    -6.274532;
-
-const SCHOOL_LON =
-    107.0809121;
-
-
-// Radius maksimal
-// dalam meter.
-
-const MAX_DISTANCE =
-    50;
-
-
-// =====================================================
-// KAMERA
-// =====================================================
-
-let cameraStream = null;
-
-let photoData = null;
-
-
-window.startCamera =
-async function(){
-
+/* =====================================================
+   KAMERA
+   ===================================================== */
+window.startCamera=async function(){
     try{
+        cameraStream=await navigator.mediaDevices.getUserMedia({
+            video:{facingMode:"user"},audio:false
+        });
 
-        cameraStream =
-            await navigator.mediaDevices.getUserMedia({
-
-                video: {
-                    facingMode: "user"
-                },
-
-                audio: false
-
-            });
-
-
-        const video =
-            document.getElementById(
-                "camera"
-            );
-
-
-        video.srcObject =
-            cameraStream;
-
-
-        document.getElementById(
-            "cameraBox"
-        ).style.display =
-            "block";
-
-
-        document.getElementById(
-            "photoStatus"
-        ).textContent =
+        const video=document.getElementById("camera");
+        video.srcObject=cameraStream;
+        document.getElementById("cameraBox").style.display="block";
+        document.getElementById("photoStatus").textContent=
             "📷 Kamera aktif. Arahkan kamera lalu tekan Ambil Foto.";
-
-    }
-
-    catch(error){
-
-        document.getElementById(
-            "photoStatus"
-        ).textContent =
+    }catch(error){
+        document.getElementById("photoStatus").textContent=
             "❌ Kamera tidak bisa digunakan. Izinkan akses kamera.";
-
         console.error(error);
-
     }
-
 };
 
+window.takePhoto=function(){
+    const video=document.getElementById("camera");
 
-window.takePhoto =
-function(){
-
-    const video =
-        document.getElementById(
-            "camera"
-        );
-
-
-    if(
-        !cameraStream ||
-        !video.videoWidth
-    ){
-
-        alert(
-            "Buka kamera terlebih dahulu."
-        );
-
+    if(!cameraStream || !video.videoWidth){
+        alert("Buka kamera terlebih dahulu.");
         return;
-
     }
 
+    const canvas=document.createElement("canvas");
+    canvas.width=video.videoWidth;
+    canvas.height=video.videoHeight;
 
-    const canvas =
-        document.createElement(
-            "canvas"
-        );
+    const ctx=canvas.getContext("2d");
+    ctx.drawImage(video,0,0,canvas.width,canvas.height);
 
+    photoData=canvas.toDataURL("image/jpeg",0.65);
 
-    canvas.width =
-        video.videoWidth;
-
-    canvas.height =
-        video.videoHeight;
-
-
-    const ctx =
-        canvas.getContext(
-            "2d"
-        );
-
-
-    ctx.drawImage(
-        video,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    // Kompres foto agar localStorage
-    // tidak cepat penuh.
-
-    photoData =
-        canvas.toDataURL(
-            "image/jpeg",
-            0.75
-        );
-
-
-    document.getElementById(
-        "photoImage"
-    ).src =
-        photoData;
-
-
-    document.getElementById(
-        "photoPreview"
-    ).style.display =
-        "block";
-
-
-    document.getElementById(
-        "photoStatus"
-    ).textContent =
-        "✅ Foto berhasil diambil.";
-
+    document.getElementById("photoImage").src=photoData;
+    document.getElementById("photoPreview").style.display="block";
+    document.getElementById("photoStatus").textContent="✅ Foto berhasil diambil.";
 };
 
-
-window.stopCamera =
-function(){
-
+window.stopCamera=function(){
     if(cameraStream){
-
-        cameraStream
-            .getTracks()
-            .forEach(
-                track =>
-                    track.stop()
-            );
-
-        cameraStream =
-            null;
-
+        cameraStream.getTracks().forEach(track=>track.stop());
+        cameraStream=null;
     }
-
-
-    document.getElementById(
-        "cameraBox"
-    ).style.display =
-        "none";
-
+    document.getElementById("cameraBox").style.display="none";
 };
 
+/* =====================================================
+   HITUNG JARAK GPS
+   ===================================================== */
+function distance(lat1,lon1,lat2,lon2){
+    const R=6371000;
+    const p1=lat1*Math.PI/180;
+    const p2=lat2*Math.PI/180;
+    const dp=(lat2-lat1)*Math.PI/180;
+    const dl=(lon2-lon1)*Math.PI/180;
 
-// =====================================================
-// HITUNG JARAK GPS
-// =====================================================
+    const a=Math.sin(dp/2)**2+
+        Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;
 
-function distance(
-    lat1,
-    lon1,
-    lat2,
-    lon2
-){
-
-    const R =
-        6000;
-
-
-    const p1 =
-        lat1 *
-        Math.PI /
-       180;
-
-
-    const p2 =
-        lat2 *
-        Math.PI /
-        180;
-
-
-    const dp =
-        (lat2 - lat1) *
-        Math.PI /
-        180;
-
-
-    const dl =
-        (lon2 - lon1) *
-        Math.PI /
-        180;
-
-
-    const a =
-        Math.sin(dp / 2) ** 2 +
-
-        Math.cos(p1) *
-        Math.cos(p2) *
-
-        Math.sin(dl / 2) ** 2;
-
-
-    const c =
-        2 *
-        Math.atan2(
-            Math.sqrt(a),
-            Math.sqrt(1 - a)
-        );
-
-
-    return R * c;
-
+    const c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+    return R*c;
 }
 
+/* =====================================================
+   LOAD DATABASE
+   ===================================================== */
+async function loadAttendance(){
+    const dbStatus=document.getElementById("dbStatus");
 
-// =====================================================
-// SIMPAN ABSENSI
-// =====================================================
+    if(SUPABASE_URL.startsWith("PASTE_") || SUPABASE_ANON_KEY.startsWith("PASTE_")){
+        dbStatus.textContent="⚠️ Supabase belum dikonfigurasi. Isi SUPABASE_URL dan SUPABASE_ANON_KEY.";
+        return;
+    }
 
-function saveAttendance(
-    student,
-    status,
-    lat = "-",
-    lon = "-",
-    accuracy = "-",
-    jarak = "-"
-){
+    const {data,error}=await supabase
+        .from(TABLE_NAME)
+        .select("*")
+        .order("id",{ascending:true});
 
-    const now =
-        new Date();
+    if(error){
+        dbStatus.textContent="❌ Gagal mengambil data database: "+error.message;
+        console.error(error);
+        return;
+    }
 
+    attendance=data || [];
+    renderTable();
+    updateStats();
+    dbStatus.textContent="☁️ Terhubung. Data bersama dari database online.";
+}
 
-    const data = {
+/* =====================================================
+   SIMPAN ABSENSI KE SUPABASE
+   ===================================================== */
+async function saveAttendance(student,status,lat=null,lon=null,accuracy=null,jarak=null){
+    const button=document.getElementById("absenButton");
+    const dbStatus=document.getElementById("dbStatus");
 
-        name:
-            student,
+    button.disabled=true;
+    button.textContent="⏳ Menyimpan...";
 
-        status:
-            status,
+    const now=new Date();
 
-        time:
-            now.toLocaleString(
-                "id-ID"
-            ),
-
-        latitude:
-            lat,
-
-        longitude:
-            lon,
-
-        accuracy:
-            accuracy,
-
-        distance:
-            jarak,
-
-        photo:
-            photoData
-
+    const row={
+        name:student,
+        status:status,
+        time:now.toLocaleString("id-ID"),
+        latitude:lat,
+        longitude:lon,
+        accuracy:accuracy,
+        distance:jarak,
+        photo:photoData
     };
 
+    const {error}=await supabase
+        .from(TABLE_NAME)
+        .insert(row);
 
-    attendance.push(
-        data
-    );
+    if(error){
+        alert("❌ Gagal menyimpan absensi:\n"+error.message);
+        dbStatus.textContent="❌ Data gagal disimpan ke database.";
+        console.error(error);
+    }else{
+        document.getElementById("photoStatus").textContent=
+            "✅ Foto dan absensi berhasil disimpan ke database.";
 
+        dbStatus.textContent="☁️ Absensi berhasil masuk database online.";
 
-    localStorage.setItem(
-        "tkjAttendance",
-        JSON.stringify(
-            attendance
-        )
-    );
+        photoData=null;
+        document.getElementById("photoPreview").style.display="none";
+        document.getElementById("photoImage").src="";
+        document.getElementById("photoStatus").textContent="📷 Foto belum diambil.";
 
+        await loadAttendance();
+        stopCamera();
+    }
 
-    renderTable();
-
-    updateStats();
-
-
-    document.getElementById(
-        "photoStatus"
-    ).textContent =
-        "✅ Foto dan absensi berhasil disimpan.";
-
-
-    stopCamera();
-
+    button.disabled=false;
+    button.textContent="📍 Absen";
 }
 
-
-// =====================================================
-// ABSEN
-// =====================================================
-
-window.absen =
-function(){
-
-    const student =
-        document.getElementById(
-            "student"
-        ).value;
-
-
-    const status =
-        document.getElementById(
-            "status"
-        ).value;
-
-
-    const gpsStatus =
-        document.getElementById(
-            "gpsStatus"
-        );
-
-
-    // NAMA WAJIB
+/* =====================================================
+   ABSEN
+   ===================================================== */
+window.absen=function(){
+    const student=document.getElementById("student").value;
+    const status=document.getElementById("status").value;
+    const gpsStatus=document.getElementById("gpsStatus");
 
     if(!student){
-
-        alert(
-            "Pilih nama siswa terlebih dahulu!"
-        );
-
+        alert("Pilih nama siswa terlebih dahulu!");
         return;
-
     }
-
-
-    // FOTO WAJIB
 
     if(!photoData){
-
-        alert(
-            "📸 Foto wajib diambil sebelum absen!"
-        );
-
+        alert("📸 Foto wajib diambil sebelum absen!");
         return;
-
     }
 
-
-    // =================================================
-    // SAKIT / IZIN / ALPA
-    // TIDAK MEMBUTUHKAN GPS
-    // =================================================
-
-    if(status !== "Hadir"){
-
-        gpsStatus.innerHTML =
-            "ℹ️ Status " +
-            status +
-            " tidak membutuhkan GPS.";
-
-        saveAttendance(
-            student,
-            status
-        );
-
+    if(status!=="Hadir"){
+        gpsStatus.innerHTML="ℹ️ Status "+status+" tidak membutuhkan GPS.";
+        saveAttendance(student,status);
         return;
-
     }
-
-
-    // =================================================
-    // HADIR
-    // GPS WAJIB
-    // =================================================
 
     if(!navigator.geolocation){
-
-        gpsStatus.textContent =
-            "❌ Browser tidak mendukung GPS.";
-
+        gpsStatus.textContent="❌ Browser tidak mendukung GPS.";
         return;
-
     }
 
-
-    gpsStatus.textContent =
-        "📡 Mengambil lokasi GPS...";
-
+    gpsStatus.textContent="📡 Mengambil lokasi GPS...";
 
     navigator.geolocation.getCurrentPosition(
+        position=>{
+            const lat=position.coords.latitude;
+            const lon=position.coords.longitude;
+            const accuracy=position.coords.accuracy;
+            const jarak=distance(lat,lon,SCHOOL_LAT,SCHOOL_LON);
 
-        position => {
-
-            const lat =
-                position.coords.latitude;
-
-
-            const lon =
-                position.coords.longitude;
-
-
-            const accuracy =
-                position.coords.accuracy;
-
-
-            const jarak =
-                distance(
-                    lat,
-                    lon,
-                    SCHOOL_LAT,
-                    SCHOOL_LON
-                );
-
-
-            // DI LUAR RADIUS
-
-            if(
-                jarak >
-                MAX_DISTANCE
-            ){
-
-                gpsStatus.innerHTML =
-                    "❌ Di luar radius sekolah.<br>" +
-                    "Jarak: " +
-                    Math.round(
-                        jarak
-                    ) +
-                    " meter";
-
+            if(jarak>MAX_DISTANCE){
+                gpsStatus.innerHTML=
+                    "❌ Di luar radius sekolah.<br>Jarak: "+Math.round(jarak)+" meter";
                 return;
-
             }
 
-
-            // DALAM RADIUS
-
-            gpsStatus.innerHTML =
-                "✅ Lokasi valid.<br>" +
-                "Jarak: " +
-                Math.round(
-                    jarak
-                ) +
-                " meter";
-
+            gpsStatus.innerHTML=
+                "✅ Lokasi valid.<br>Jarak: "+Math.round(jarak)+" meter";
 
             saveAttendance(
-
                 student,
-
                 status,
-
-                lat.toFixed(6),
-
-                lon.toFixed(6),
-
-                Math.round(
-                    accuracy
-                ),
-
-                Math.round(
-                    jarak
-                )
-
+                Number(lat.toFixed(6)),
+                Number(lon.toFixed(6)),
+                Math.round(accuracy),
+                Math.round(jarak)
             );
-
         },
-
-
-        error => {
-
-            let message =
-                "❌ GPS gagal digunakan.";
-
-
-            if(
-                error.code === 1
-            ){
-
-                message =
-                    "❌ Izin lokasi ditolak.";
-
-            }
-
-
-            if(
-                error.code === 2
-            ){
-
-                message =
-                    "❌ Lokasi tidak tersedia.";
-
-            }
-
-
-            if(
-                error.code === 3
-            ){
-
-                message =
-                    "❌ GPS terlalu lama merespons.";
-
-            }
-
-
-            gpsStatus.textContent =
-                message;
-
+        error=>{
+            let message="❌ GPS gagal digunakan.";
+            if(error.code===1) message="❌ Izin lokasi ditolak.";
+            if(error.code===2) message="❌ Lokasi tidak tersedia.";
+            if(error.code===3) message="❌ GPS terlalu lama merespons.";
+            gpsStatus.textContent=message;
         },
-
-
-        {
-
-            enableHighAccuracy:
-                true,
-
-            timeout:
-                10000,
-
-            maximumAge:
-                0
-
-        }
-
+        {enableHighAccuracy:true,timeout:10000,maximumAge:0}
     );
-
 };
 
-
-// =====================================================
-// TABEL
-// =====================================================
+/* =====================================================
+   TABEL
+   ===================================================== */
+function escapeHtml(value){
+    return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
 
 function renderTable(){
+    const table=document.getElementById("attendanceTable");
+    table.innerHTML="";
 
-    const table =
-        document.getElementById(
-            "attendanceTable"
-        );
+    attendance.forEach((item,index)=>{
+        const tr=document.createElement("tr");
+        const className=String(item.status||"").toLowerCase();
+        const photo=item.photo
+            ? `<img class="table-photo" src="${item.photo}" alt="Foto">`
+            : "—";
 
+        tr.innerHTML=`
+            <td>${index+1}</td>
+            <td>${photo}</td>
+            <td>${escapeHtml(item.name)}</td>
+            <td><span class="badge ${className}">${escapeHtml(item.status)}</span></td>
+            <td>${escapeHtml(item.time)}</td>
+            <td>${escapeHtml(item.latitude ?? "-")}</td>
+            <td>${escapeHtml(item.longitude ?? "-")}</td>
+        `;
 
-    table.innerHTML =
-        "";
-
-
-    attendance.forEach(
-        (item, index) => {
-
-            const tr =
-                document.createElement(
-                    "tr"
-                );
-
-
-            const className =
-                item.status
-                    .toLowerCase();
-
-
-            const photo =
-                item.photo
-                ?
-                `<img
-                    class="table-photo"
-                    src="${item.photo}"
-                    alt="Foto">
-                `
-                :
-                "—";
-
-
-            tr.innerHTML = `
-
-                <td>
-                    ${index + 1}
-                </td>
-
-                <td>
-                    ${photo}
-                </td>
-
-                <td>
-                    ${item.name}
-                </td>
-
-                <td>
-                    <span
-                        class="badge ${className}">
-                        ${item.status}
-                    </span>
-                </td>
-
-                <td>
-                    ${item.time}
-                </td>
-
-                <td>
-                    ${item.latitude}
-                </td>
-
-                <td>
-                    ${item.longitude}
-                </td>
-
-            `;
-
-
-            table.appendChild(
-                tr
-            );
-
-        }
-    );
-
+        table.appendChild(tr);
+    });
 }
 
-
-// =====================================================
-// STATISTIK
-// =====================================================
-
+/* =====================================================
+   STATISTIK
+   ===================================================== */
 function updateStats(){
+    document.getElementById("totalHadir").textContent=
+        attendance.filter(x=>x.status==="Hadir").length;
 
-    document.getElementById(
-        "totalHadir"
-    ).textContent =
-        attendance.filter(
-            x =>
-                x.status ===
-                "Hadir"
-        ).length;
+    document.getElementById("totalSakit").textContent=
+        attendance.filter(x=>x.status==="Sakit").length;
 
+    document.getElementById("totalIzin").textContent=
+        attendance.filter(x=>x.status==="Izin").length;
 
-    document.getElementById(
-        "totalSakit"
-    ).textContent =
-        attendance.filter(
-            x =>
-                x.status ===
-                "Sakit"
-        ).length;
-
-
-    document.getElementById(
-        "totalIzin"
-    ).textContent =
-        attendance.filter(
-            x =>
-                x.status ===
-                "Izin"
-        ).length;
-
-
-    document.getElementById(
-        "totalAlpa"
-    ).textContent =
-        attendance.filter(
-            x =>
-                x.status ===
-                "Alpa"
-        ).length;
-
+    document.getElementById("totalAlpa").textContent=
+        attendance.filter(x=>x.status==="Alpa").length;
 }
 
-
-// =====================================================
-// HAPUS DATA
-// =====================================================
-
-window.clearData =
-function(){
-
-    if(
-        !confirm(
-            "Hapus seluruh data absensi?"
-        )
-    ){
-
+/* =====================================================
+   HAPUS SEMUA DATA DATABASE
+   ===================================================== */
+window.clearData=async function(){
+    if(!confirm("Hapus seluruh data absensi dari DATABASE untuk semua HP?")){
         return;
-
     }
 
+    const dbStatus=document.getElementById("dbStatus");
+    dbStatus.textContent="⏳ Menghapus data database...";
 
-    attendance =
-        [];
+    const {error}=await supabase
+        .from(TABLE_NAME)
+        .delete()
+        .neq("id",0);
 
+    if(error){
+        alert("❌ Gagal menghapus data:\n"+error.message);
+        dbStatus.textContent="❌ Data gagal dihapus.";
+        console.error(error);
+        return;
+    }
 
-    localStorage.removeItem(
-        "tkjAttendance"
-    );
-
-
-    photoData =
-        null;
-
-
-    document.getElementById(
-        "photoPreview"
-    ).style.display =
-        "none";
-
-
-    document.getElementById(
-        "photoImage"
-    ).src =
-        "";
-
-
-    document.getElementById(
-        "photoStatus"
-    ).textContent =
-        "📷 Foto belum diambil.";
-
-
+    attendance=[];
     renderTable();
-
     updateStats();
 
-
-    document.getElementById(
-        "gpsStatus"
-    ).textContent =
-        "Data absensi telah dihapus.";
-
+    photoData=null;
+    document.getElementById("photoPreview").style.display="none";
+    document.getElementById("photoImage").src="";
+    document.getElementById("photoStatus").textContent="📷 Foto belum diambil.";
+    document.getElementById("gpsStatus").textContent="Data absensi telah dihapus dari database.";
+    dbStatus.textContent="☁️ Semua data absensi telah dihapus.";
 };
 
+/* =====================================================
+   REFRESH OTOMATIS
+   Setiap 5 detik HP mengambil data terbaru.
+   Jadi absensi teman akan muncul tanpa harus refresh.
+   ===================================================== */
+setInterval(loadAttendance,5000);
 
-// =====================================================
-// LOAD DATA
-// =====================================================
-
-renderTable();
-
-updateStats();
-
+loadAttendance();
 </script>
 
 </body>
