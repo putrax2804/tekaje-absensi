@@ -442,7 +442,7 @@ window.absen=function(){
             const accuracy=position.coords.accuracy;
             const jarak=distance(lat,lon,SCHOOL_LAT,SCHOOL_LON);
 
-            if(jarak>MAX_DISTANCE){
+            if(jarak > MAX_DISTANCE){
                 gpsStatus.innerHTML=
     "❌ Di luar radius sekolah.<br>" +
     "Jarak: " + Math.round(jarak) + " meter<br><br>" +
