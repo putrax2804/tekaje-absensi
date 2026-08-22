@@ -264,11 +264,16 @@ let photoData=null;
 window.startCamera=async function(){
     try{
         cameraStream=await navigator.mediaDevices.getUserMedia({
-            video:{facingMode:"user"},audio:false
+            video:{facingMode:"user"},
+            audio:false
         });
 
         const video=document.getElementById("camera");
         video.srcObject=cameraStream;
+
+        // NON-MIRROR
+        video.style.transform="scaleX(1)";
+
         document.getElementById("cameraBox").style.display="block";
         document.getElementById("photoStatus").textContent=
             "📷 Kamera aktif. Arahkan kamera lalu tekan Ambil Foto.";
